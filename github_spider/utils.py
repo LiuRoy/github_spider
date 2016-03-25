@@ -10,15 +10,14 @@ from github_spider.const import (
 )
 
 
-def gen_user_page_url(user_name, page=1):
+def gen_user_page_url(user_name):
     """获取用户主页url
 
     Args:
         user_name (string): github用户id
         page (int): 页号
     """
-    return 'https://{}/users/{}?page={}'.format(GITHUB_API_HOST,
-                                                user_name, page)
+    return 'https://{}/users/{}'.format(GITHUB_API_HOST, user_name)
 
 
 def gen_user_follwer_url(user_name, page=1):

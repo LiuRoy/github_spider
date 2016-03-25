@@ -2,10 +2,14 @@
 """
     异步任务
 """
-from github_spider.const import MongodbCollection
+from celery import Celery
+from github_spider.const import MongodbCollection, BROKER_URI
 from github_spider.extensions import mongo_db
 
+app = Celery('write_mongo', broker=BROKER_URI)
 
+
+@app.task
 def mongo_save_entity(entity, is_user=True):
     """把user或repo信息写入mongo
 
@@ -19,6 +23,7 @@ def mongo_save_entity(entity, is_user=True):
     mongo_collection.update({'id': entity['id']}, entity, upsert=True)
 
 
+@app.task
 def mongo_save_relation(entity, relation_type):
     """把用户与用户或用户与项目的关系写入mongo
 

@@ -3,7 +3,6 @@
     流程控制
 """
 import logging
-from gevent import spawn
 
 from github_spider.const import (
     REDIS_VISITED_URLS,
@@ -34,7 +33,10 @@ def request_api(urls, method, callback, **kwargs):
         method (func): 请求方法
         callback (func): 回调函数
     """
-
+    print(urls)
+    print(method)
+    print(callback)
+    print(kwargs)
     unvisited_urls = check_url_visited(urls)
     if not unvisited_urls:
         return
@@ -44,10 +46,9 @@ def request_api(urls, method, callback, **kwargs):
     except Exception as exc:
         LOGGER.exception(exc)
     else:
-        greenlet_list = [spawn(callback, body, method, **kwargs)
-                         for body in bodies]
-        map(lambda x: x.start(), greenlet_list)
         redis_client.sadd(REDIS_VISITED_URLS, *unvisited_urls)
+        for body in bodies:
+            callback(body, method, **kwargs)
 
 
 def parse_user(data, method):
@@ -78,7 +79,7 @@ def parse_user(data, method):
         'following': data.get('following', 0),
         'created_at': data.get('created_at')
     }
-    mongo_save_entity(user)
+    mongo_save_entity.delay(user)
     follower_urls = gen_url_list(user_id, gen_user_follwer_url,
                                  user['followers'])
     following_urls = gen_url_list(user_id, gen_user_following_url,
@@ -86,12 +87,10 @@ def parse_user(data, method):
     repo_urls = gen_url_list(user_id, gen_user_repo_url, user['repos_count'])
 
     request_api(repo_urls, method, parse_repos, user=user_id)
-    greenlet_list = [
-        spawn(request_api, follower_urls, method, parse_follow,
-              user=user_id, kind=MongodbCollection.FOLLOWER),
-        spawn(request_api, following_urls, method, parse_follow,
-              user=user_id, kind=MongodbCollection.FOLLOWING)]
-    map(lambda x: x.start(), greenlet_list)
+    request_api(following_urls, method, parse_follow,
+                user=user_id, kind=MongodbCollection.FOLLOWING)
+    request_api(follower_urls, method, parse_follow,
+                user=user_id, kind=MongodbCollection.FOLLOWER)
 
 
 def parse_repos(data, method, user=None):
@@ -125,9 +124,9 @@ def parse_repos(data, method, user=None):
             'fork_count': element.get('fork_count'),
         }
         repo_list.append(repo['name'])
-        mongo_save_entity(repo, False)
-    mongo_save_relation({'id': user, 'list': repo_list},
-                        MongodbCollection.USER_REPO)
+        mongo_save_entity.delay(repo, False)
+    mongo_save_relation.delay({'id': user, 'list': repo_list},
+                              MongodbCollection.USER_REPO)
 
 
 def parse_follow(data, method, kind=MongodbCollection.FOLLOWER, user=None):
@@ -148,5 +147,5 @@ def parse_follow(data, method, kind=MongodbCollection.FOLLOWER, user=None):
         users.append(element.get('login'))
         urls.append(gen_user_page_url(element.get('login')))
 
-    mongo_save_relation({'id': user, 'list': users}, kind)
+    mongo_save_relation.delay({'id': user, 'list': users}, kind)
     request_api(urls, method, parse_user)

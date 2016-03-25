@@ -6,7 +6,7 @@ import signal
 import gevent
 
 from github_spider.async.flow import request_api, parse_user
-from async.request import async_get
+from async.request import sync_get, async_get
 from github_spider.utils import gen_user_page_url
 from github_spider.extensions import redis_client
 

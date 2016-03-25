@@ -19,20 +19,18 @@ def get_ip181_proxies():
     html_page = requests.get('http://www.ip181.com/').content.decode('gb2312')
     jq = PyQuery(html_page)
 
-    proxies = []
+    proxy_list = []
     for tr in jq("tr"):
-        element = []
-        for td in PyQuery(tr)("td"):
-            element.append(PyQuery(td).text())
+        element = [PyQuery(td).text() for td in PyQuery(tr)("td")]
         if 'HTTPS' not in element[3]:
             continue
 
         result = re.search(r'\d+\.\d+', element[4], re.UNICODE)
         if result and float(result.group()) > 5:
             continue
-        proxies.append((element[0], element[1]))
+        proxy_list.append((element[0], element[1]))
 
-    return proxies
+    return proxy_list
 
 if __name__ == '__main__':
     while 1:

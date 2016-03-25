@@ -33,10 +33,6 @@ def request_api(urls, method, callback, **kwargs):
         method (func): 请求方法
         callback (func): 回调函数
     """
-    print(urls)
-    print(method)
-    print(callback)
-    print(kwargs)
     unvisited_urls = check_url_visited(urls)
     if not unvisited_urls:
         return
@@ -47,8 +43,7 @@ def request_api(urls, method, callback, **kwargs):
         LOGGER.exception(exc)
     else:
         redis_client.sadd(REDIS_VISITED_URLS, *unvisited_urls)
-        for body in bodies:
-            callback(body, method, **kwargs)
+        map(lambda body: callback(body, method, **kwargs), bodies)
 
 
 def parse_user(data, method):

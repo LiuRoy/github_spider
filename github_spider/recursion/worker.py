@@ -3,7 +3,8 @@
     异步任务
 """
 from celery import Celery
-from github_spider.const import MongodbCollection, BROKER_URI
+from github_spider.const import MongodbCollection
+from github_spider.settings import BROKER_URI
 from github_spider.extensions import mongo_db
 
 app = Celery('write_mongo', broker=BROKER_URI)

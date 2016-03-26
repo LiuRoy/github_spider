@@ -5,10 +5,10 @@
 from pymongo import MongoClient
 from redis import Redis
 
-from github_spider.const import (
-    REDIS_URI,
+from github_spider.const import MONGO_DB_NAME
+from github_spider.settings import (
     MONGO_URI,
-    MONGO_DB_NAME
+    REDIS_URI
 )
 
 mongo_client = MongoClient(MONGO_URI)

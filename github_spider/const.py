@@ -2,26 +2,14 @@
 
 GITHUB_API_HOST = 'api.github.com'
 
-START_USER = 'LiuRoy'
-
 # API 获取列表最大长度
 PAGE_SIZE = 30
-
-TIMEOUT = 10
-
-RETRY_COUNT = 3
-
-MONGO_URI = 'mongodb://localhost:27017'
-REDIS_URI = 'redis://localhost:6379'
-BROKER_URI = 'amqp://guest:guest@localhost:5672/'
 
 MONGO_DB_NAME = 'github'
 
 REDIS_VISITED_URLS = 'visited_urls'
-PROXY_KEY = 'proxy_zset'
 
-PROXY_USE_COUNT = 30
-REQUEST_RETRY_COUNT = 5
+PROXY_KEY = 'proxy_zset'
 
 HEADERS = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',

@@ -9,7 +9,8 @@ import requests
 from pyquery import PyQuery
 
 from github_spider.extensions import redis_client
-from github_spider.const import PROXY_KEY, PROXY_USE_COUNT
+from github_spider.const import PROXY_KEY
+from github_spider.settings import PROXY_USE_COUNT
 
 
 def get_ip181_proxies():

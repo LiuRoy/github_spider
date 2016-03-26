@@ -34,3 +34,25 @@ class MongodbCollection(object):
     USER_REPO = 'user_repo'
     FOLLOWER = 'follower'
     FOLLOWING = 'following'
+
+
+class RoutingKey(object):
+    """
+    消息队列路由
+    """
+    USER = 'user'
+    REPO = 'repo'
+    FOLLOWER = 'follower'
+    FOLLOWING = 'following'
+
+
+class QueueName(object):
+    """
+    消息队列名称
+    """
+    USER = 'user'
+    REPO = 'repo'
+    FOLLOWER = 'follower'
+    FOLLOWING = 'following'
+
+MESSAGE_QUEUE_EXCHANGE = 'github'

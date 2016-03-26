@@ -4,10 +4,10 @@
 """
 from celery import Celery
 from github_spider.const import MongodbCollection
-from github_spider.settings import BROKER_URI
+from github_spider.settings import CELERY_BROKER_URI
 from github_spider.extensions import mongo_db
 
-app = Celery('write_mongo', broker=BROKER_URI)
+app = Celery('write_mongo', broker=CELERY_BROKER_URI)
 
 
 @app.task

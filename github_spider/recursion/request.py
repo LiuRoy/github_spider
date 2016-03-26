@@ -15,21 +15,11 @@ from github_spider.const import (
 )
 from github_spider.settings import (
     TIMEOUT,
-    PROXY_USE_COUNT,
     REQUEST_RETRY_COUNT,
 )
+from github_spider.utils import get_proxy
 
 LOGGER = logging.getLogger(__name__)
-
-
-def _get_proxy():
-    """
-    从redis获取代理
-    """
-    available_proxy = redis_client.zrangebyscore(PROXY_KEY, 0, PROXY_USE_COUNT)
-    if available_proxy:
-        return available_proxy[0]
-    return None
 
 
 def request_with_proxy(url):
@@ -37,7 +27,7 @@ def request_with_proxy(url):
     proxy访问url
     """
     for i in range(REQUEST_RETRY_COUNT):
-        proxy = _get_proxy()
+        proxy = get_proxy()
         if not proxy:
             time.sleep(10 * 60)
 
@@ -73,7 +63,7 @@ def async_get(urls):
     """
     rs = []
     for url in urls:
-        proxy = _get_proxy()
+        proxy = get_proxy()
         if not proxy:
             time.sleep(10 * 60)
 

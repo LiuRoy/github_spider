@@ -8,7 +8,7 @@ from github_spider.const import (
     REDIS_VISITED_URLS,
     MongodbCollection,
 )
-from github_spider.recursion.worker import (
+from github_spider.worker import (
     mongo_save_entity,
     mongo_save_relation,
 )

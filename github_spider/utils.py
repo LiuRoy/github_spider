@@ -2,10 +2,13 @@
 """
     工具函数
 """
+import urlparse
 from github_spider.extensions import redis_client
+from github_spider.settings import PROXY_USE_COUNT
 from github_spider.const import (
     GITHUB_API_HOST,
     PAGE_SIZE,
+    PROXY_KEY,
     REDIS_VISITED_URLS,
 )
 
@@ -60,6 +63,14 @@ def get_short_url(url):
     return url[23:-1]
 
 
+def find_login_by_url(url):
+    """
+    获取url中的用户名
+    """
+    result = urlparse.urlsplit(url)
+    return result.path.split('/')[2]
+
+
 def gen_url_list(user_name, func, count):
     """调用func生成url列表
 
@@ -87,3 +98,13 @@ def check_url_visited(urls):
         if not visited:
             result.append(url)
     return result
+
+
+def get_proxy():
+    """
+    从redis获取代理
+    """
+    available_proxy = redis_client.zrangebyscore(PROXY_KEY, 0, PROXY_USE_COUNT)
+    if available_proxy:
+        return available_proxy[0]
+    return None

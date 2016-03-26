@@ -5,12 +5,12 @@
 import signal
 import gevent
 
-from github_spider.async.flow import request_api, parse_user
-from async.request import sync_get, async_get
+from github_spider.recursion.flow import request_api, parse_user
+from github_spider.recursion.request import sync_get, async_get
 from github_spider.utils import gen_user_page_url
 from github_spider.extensions import redis_client
-
-from github_spider.const import START_USER, REDIS_VISITED_URLS
+from github_spider.settings import START_USER
+from github_spider.const import REDIS_VISITED_URLS
 
 
 def main():

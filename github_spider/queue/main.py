@@ -12,9 +12,9 @@ from github_spider.const import REDIS_VISITED_URLS, RoutingKey
 from github_spider.utils import gen_user_page_url
 
 if __name__ == '__main__':
-    redis_client.delete(REDIS_VISITED_URLS)
-    start_user_url = gen_user_page_url(START_USER)
-    url_sender.send_url(start_user_url, RoutingKey.USER)
+    #redis_client.delete(REDIS_VISITED_URLS)
+    #start_user_url = gen_user_page_url(START_USER)
+    #url_sender.send_url(start_user_url, RoutingKey.USER)
 
     # user_consumer = consumer_list[0]
     # user_consumer.run()
